@@ -50,13 +50,18 @@ export function LoginLogic() {
       response.data.user.role.role === 'chef' && navigate('/kitchen');
     } catch (error) {
       if (error.response) {
-        if (error.response.data === 'Email and password are required') {
-          setErrorLabel('Completa los campos requeridos');
-        } else if (error.response.data === 'Cannot find user') {
-          setErrorLabel('Usuario no registrado');
-        } else if (error.response.data === 'Incorrect password') {
-          setErrorLabel('Credenciales  incorrectas');
-        } else {
+        // console.log(error.response.data);
+        if (error.response.data){
+          setErrorLabel(error.response.data.error)
+        }
+        // if (error.response.data === 'Email and password are required') {
+        //   setErrorLabel('Completa los campos requeridos');
+        // } else if (error.response.data === 'Cannot find user') {
+        //   setErrorLabel('Usuario no registrado');
+        // } else if (error.response.data === 'Incorrect password') {
+        //   setErrorLabel('Credenciales  incorrectas');
+        // } 
+        else {
           navigate('/error-page');
         }
       } else {
