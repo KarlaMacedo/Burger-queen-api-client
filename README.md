@@ -189,7 +189,7 @@ https://dev-007-burger-queen-api-client.vercel.app/
 
 ### API:
 
-https://localhost:8080/
+https://burger-queen-api-wp1d-dev.fl0.io/
 
 ## 7. Uso
 

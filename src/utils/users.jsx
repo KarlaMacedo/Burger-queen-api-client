@@ -40,7 +40,7 @@ export function UsersLogic() {
 
     // OBTENER DATOS DE USARIOS
     ApiRequest({
-      url: 'https://localhost:8080/users',
+      url: 'https://burger-queen-api-wp1d-dev.fl0.io/users',
       method: 'get',
     })
       .then((response) => {
@@ -119,7 +119,7 @@ export function UsersLogic() {
     }
 
     ApiRequest({
-      url: `https://localhost:8080/users`,
+      url: `https://burger-queen-api-wp1d-dev.fl0.io/users`,
       method: 'post',
       body: newUser,
     })
@@ -175,7 +175,7 @@ export function UsersLogic() {
     }
 
     ApiRequest({
-      url: `https://localhost:8080/users/${editingUserData.id}`,
+      url: `https://burger-queen-api-wp1d-dev.fl0.io/users/${editingUserData.id}`,
       method: 'patch',
       body: updateUsers,
     })
@@ -219,7 +219,7 @@ export function UsersLogic() {
     const body = userDelete;
 
     ApiRequest({
-      url: `https://localhost:8080/users/${userId}`,
+      url: `https://burger-queen-api-wp1d-dev.fl0.io/users/${userId}`,
       method: 'delete',
       body: body,
     })
