@@ -102,18 +102,18 @@ export default function Users() {
               </thead>
               <tbody>
                 {usersData
-                  .filter(user => selectedRoles.includes(user.role))
+                  .filter(user => selectedRoles.includes(user.role.role))
                   .map((user) => (
-                    <tr key={user.id}>
-                      <td>#{user.id}</td>
+                    <tr key={user._id}>
+                      <td>#{user._id}</td>
                       <td>{user.email}</td>
-                      <td>{getRoleLabel(user.role)}</td>
+                      <td>{getRoleLabel(user.role.role)}</td>
                       <td className='buttonsTable'>
                         <img
                           src={Edit}
                           className="edit"
                           alt="buttonEdit"
-                          onClick={() => handleOpenEditModalUsers(user.id)}
+                          onClick={() => handleOpenEditModalUsers(user._id)}
                         />
                       </td>
                       <td className='buttonsTable'>
@@ -121,20 +121,20 @@ export default function Users() {
                           src={Delete}
                           className="delete"
                           alt="buttonDelete"
-                          onClick={() => handleOpenModalDeleteUsers(user.id)}
+                          onClick={() => handleOpenModalDeleteUsers(user._id)}
                         />
                       </td>
                       <td className='modalDelete'>
-                        <Modal open={modalOpenDeleteUsers && modalUserId === user.id} onClose={handleCloseModalUsers}>
+                        <Modal open={modalOpenDeleteUsers && modalUserId === user._id} onClose={handleCloseModalUsers}>
                           <h2 className='textModal'>Estas seguro que deseas eliminar al siguiente usuario?</h2>
                           <div className='containerTextDeleteModal'>
-                            <label className="textLabelsModalDeleteUsers">Puesto:</label><label className='userModalText'>{getRoleLabel(user.role)}</label></div>
+                            <label className="textLabelsModalDeleteUsers">Puesto:</label><label className='userModalText'>{getRoleLabel(user.role.role)}</label></div>
                           <div className='containerTextDeleteModal'>
                             <label className="textLabelsModalDeleteUsers">Correo:</label><label className='userModalText'>{user.email}</label></div>
                           <div>
                             <Button
                               label='CONFIRMAR'
-                              onClick={() => handleConfirmDeleteClickUsers(user.id)}
+                              onClick={() => handleConfirmDeleteClickUsers(user._id)}
                               classButton='buttonsModal'>
                             </Button>
                             <Button
@@ -144,8 +144,8 @@ export default function Users() {
                             </Button>
                           </div>
                         </Modal>
-                        <Modal open={modalOpenEditUsers && modalUserId === user.id} onClose={handleCloseModalUsers}>
-                          <h2 className='textModal'>Editando usuario  #{user.id} :</h2>
+                        <Modal open={modalOpenEditUsers && modalUserId === user._id} onClose={handleCloseModalUsers}>
+                          <h2 className='textModal'>Editando usuario  #{user._id} :</h2>
                           <div className='infoUserModal'>
                             <Input
                               type='text'
@@ -219,7 +219,7 @@ export default function Users() {
                                 <label className='bebas'>PUESTO :</label>
                                 <select
                                   className='boxSelectUsers'
-                                  value={newUser.role}
+                                  value={newUser.role.role}
                                   onChange={(event) => setNewUser({ ...newUser, role: event.target.value })}
                                 >
                                   <option value='' disabled>Seleccione un puesto</option>
