@@ -116,7 +116,7 @@ const mockOrdersData = [
 describe('Componente Kitchen', () => {
   
   it('Renderiza el componente correctamente', async() => {      
-/*  mock.onGet('https://burger-queen-api-wp1d-dev.fl0.io/orders').reply(200, mockOrdersData)
+/*  mock.onGet('https://burger-queen-api-zvby-dev.fl0.io/orders').reply(200, mockOrdersData)
       
     render(
       <MemoryRouter>
