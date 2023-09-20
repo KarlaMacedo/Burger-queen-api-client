@@ -41,7 +41,7 @@ export function OrdersLogic() {
 
     // OBTENER DATOS DE PEDIDOS
     ApiRequest({
-      url: 'https://burger-queen-api-wp1d-dev.fl0.io/orders',
+      url: 'https://burger-queen-api-zvby-dev.fl0.io/orders',
       method: 'get',
     })
       .then((response) => {
@@ -62,7 +62,7 @@ export function OrdersLogic() {
 
     // OBTENER DATOS DE PRODUCTOS
     ApiRequest({
-      url: 'https://burger-queen-api-wp1d-dev.fl0.io/products',
+      url: 'https://burger-queen-api-zvby-dev.fl0.io/products',
       method: 'get',
     })
       .then((response) => {
@@ -223,7 +223,7 @@ export function OrdersLogic() {
     }
 
     ApiRequest({
-      url: `https://burger-queen-api-wp1d-dev.fl0.io/orders/${orderId}`,
+      url: `https://burger-queen-api-zvby-dev.fl0.io/orders/${orderId}`,
       method: 'patch',
       body: body,
     })
@@ -263,7 +263,7 @@ export function OrdersLogic() {
     const body = orderDelete;
 
     ApiRequest({
-      url: `https://burger-queen-api-wp1d-dev.fl0.io/orders/${orderId}`,
+      url: `https://burger-queen-api-zvby-dev.fl0.io/orders/${orderId}`,
       method: 'delete',
       body: body,
     })
@@ -291,7 +291,7 @@ export function OrdersLogic() {
     };
 
     ApiRequest({
-      url: `https://burger-queen-api-wp1d-dev.fl0.io/orders/${orderId}`,
+      url: `https://burger-queen-api-zvby-dev.fl0.io/orders/${orderId}`,
       method: 'patch',
       body: body,
     })

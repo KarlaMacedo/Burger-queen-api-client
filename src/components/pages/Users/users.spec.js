@@ -154,7 +154,7 @@ describe('Componente Users', () => {
         useNavigateMock.mockImplementation(() => navigateMock);
     
         const mock = new MockAdapter(axios);
-        mock.onGet('https://burger-queen-api-wp1d-dev.fl0.io/users').reply(401, { data: 'jwt expired' });
+        mock.onGet('https://burger-queen-api-zvby-dev.fl0.io/users').reply(401, { data: 'jwt expired' });
     
         render(
           <MemoryRouter>
