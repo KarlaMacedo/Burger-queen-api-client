@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ApiRequest from '../services/apiRequest.jsx';6
+import ApiRequest from '../services/apiRequest.jsx'; 6
 
 // LÓGICA DE LA SECCIÓN MENÚ
 export function useMenuLogic() {
@@ -56,7 +56,7 @@ export function useMenuLogic() {
       }
     });
   }, [navigate, token, userId, role]);
-  
+
   const breakfastProducts = productsData.filter(product => product.type === 'Desayuno');
   const lunchProducts = productsData.filter(product => product.type === 'Almuerzo');
 
@@ -74,27 +74,27 @@ export function useMenuLogic() {
   const handleLunchClick = () => {
     setShowMenu(false)
   };
-  
+
   //agregar producto al carrito
   const handleClickProduct = (product) => {
     setCartData(prevCartData => {
       const updatedCartData = [...prevCartData];
-        if (checkProductExists(product, updatedCartData)){
-          const existingProductIndex = updatedCartData.findIndex((p) => p.id === product.id);
-          // Clonar el objeto del producto para evitar modificar el objeto original
-          const clonedProduct = { ...updatedCartData[existingProductIndex] };
-          clonedProduct.qty += 1;
-          updatedCartData[existingProductIndex] = clonedProduct;
-        } else {
-          product.qty = 1;
-          updatedCartData.push(product);
-        }
+      if (checkProductExists(product, updatedCartData)) {
+        const existingProductIndex = updatedCartData.findIndex((p) => p._id === product._id);
+        // Clonar el objeto del producto para evitar modificar el objeto original
+        const clonedProduct = { ...updatedCartData[existingProductIndex] };
+        clonedProduct.qty += 1;
+        updatedCartData[existingProductIndex] = clonedProduct;
+      } else {
+        product.qty = 1;
+        updatedCartData.push(product);
+      }
       return updatedCartData;
     })
   };
 
   //chequear si el producto ya existe en el carrito
-  const checkProductExists = (item, arr) => arr.filter(p => p.id === item.id).length > 0;
+  const checkProductExists = (item, arr) => arr.filter(p => p._id === item._id).length > 0;
 
   //obtener precio total de todos los productos en el carrito
   const getTotalPrice = () => cartData.reduce((acc, curr) => acc + curr.price * curr.qty, 0);
@@ -103,7 +103,7 @@ export function useMenuLogic() {
   const handleClickAdd = (product) => {
     setCartData(prevCartData => {
       const updatedCartData = [...prevCartData];
-      const existingProductIndex = updatedCartData.findIndex((p) => p.id === product.id);
+      const existingProductIndex = updatedCartData.findIndex((p) => p._id === product._id);
       if (checkProductExists(product, updatedCartData)) {
         const clonedProduct = { ...updatedCartData[existingProductIndex] };
         clonedProduct.qty += 1;
@@ -117,14 +117,14 @@ export function useMenuLogic() {
   const handleClickRemove = (product) => {
     setCartData(prevCartData => {
       const updatedCartData = [...prevCartData];
-      const existingProductIndex = updatedCartData.findIndex((p) => p.id === product.id);
+      const existingProductIndex = updatedCartData.findIndex((p) => p._id === product._id);
       if (checkProductExists(product, updatedCartData)) {
         const clonedProduct = { ...updatedCartData[existingProductIndex] };
         if (clonedProduct.qty === 1) {
           handleClickOpenDelete(product);
         } else {
-        clonedProduct.qty -= 1;
-        updatedCartData[existingProductIndex] = clonedProduct;
+          clonedProduct.qty -= 1;
+          updatedCartData[existingProductIndex] = clonedProduct;
         }
       }
       return updatedCartData;
@@ -133,7 +133,7 @@ export function useMenuLogic() {
 
   // abrir modal para confirmar eliminación del producto
   const handleClickOpenDelete = (product) => {
-    const updatedProductId = product.id;
+    const updatedProductId = product._id;
     setModalProductId(updatedProductId);
     setModalDelete(true);
   };
@@ -143,16 +143,16 @@ export function useMenuLogic() {
     setModalProductId(null);
     setModalDelete(false);
   };
-  
+
   // eliminar producto del carrito (todas las unidades)
   const handleDelete = (product) => {
     setCartData(prevCartData => {
       const updatedCartData = [...prevCartData];
-      const existingProductIndex = updatedCartData.findIndex((p) => p.id === product.id);
-       updatedCartData.splice(existingProductIndex, 1);
-       setModalProductId(null);
-       setModalDelete(false);
-       return updatedCartData;
+      const existingProductIndex = updatedCartData.findIndex((p) => p._id === product._id);
+      updatedCartData.splice(existingProductIndex, 1);
+      setModalProductId(null);
+      setModalDelete(false);
+      return updatedCartData;
     });
   };
 
@@ -177,7 +177,7 @@ export function useMenuLogic() {
   const handleOpenModalOrderSuccess = () => setModalOrderSuccess(true); // alerta de orden creada
 
   // cerrar modales
-  const handleCloseModalClientName = () => setModalClientName(false); 
+  const handleCloseModalClientName = () => setModalClientName(false);
 
   const handleCloseModalTableNumber = () => setModalTableNumber(false);
 
@@ -199,19 +199,17 @@ export function useMenuLogic() {
   // construir nueva orden
   const getOrderData = async (client, table, products) => {
     const newOrder = {
-      userId: Number(userId),
+      userId: userId,
       client: client,
       table: Number(table),
       products: products.map((product) => ({
         qty: product.qty,
-        product: {
-          id: product.id,
-          name: product.name,
-          price: product.price,
-          image: product.image,
-          type: product.type,
-          dateEntry: product.dateEntry
-        },
+        _id: product._id,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+        type: product.type,
+        dateEntry: product.dateEntry,
       })),
       status: 'En preparación',
       dateEntry: getDateAndTime(),
@@ -264,32 +262,31 @@ export function useMenuLogic() {
     const updatedClient = client;
     const updatedTableNumber = table;
     const body = await getOrderData(updatedClient, updatedTableNumber, updatedOrderProducts);
-    console.log(body)
     ApiRequest({
       url: 'https://burger-queen-api-zvby-dev.fl0.io/orders',
       method: 'post',
       body: body,
     })
-    .then(() => {
-      console.log ('Orden creada y en preparación')
-          setCartData([]);
-          setClientName('');
-          setTableNumber('default');
-          clearClientAndTable();
-          handleOpenModalOrderSuccess();
-        })
-        .catch((error) => {
+      .then(() => {
+        console.log('Orden creada y en preparación')
+        setCartData([]);
+        setClientName('');
+        setTableNumber('default');
+        clearClientAndTable();
+        handleOpenModalOrderSuccess();
+      })
+      .catch((error) => {
+        console.error(error);
+        if (error.response.data === 'jwt expired' && error.response.status === 401) {
           console.error(error);
-          if (error.response.data === 'jwt expired' && error.response.status === 401) {
-            console.error(error);
-            navigate('/login');
-          } else {
-            console.error(error);
-            error && navigate('/error-page');
-          }
-        });
+          navigate('/login');
+        } else {
+          console.error(error);
+          error && navigate('/error-page');
+        }
+      });
   };
-  
+
   return {
     showMenu,
     breakfastProducts,

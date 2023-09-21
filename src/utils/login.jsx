@@ -39,23 +39,29 @@ export function LoginLogic() {
 
       // Guardar el accessToken en el localStorage
       if (response.data) {
+        console.log(response.data);
         localStorage.setItem('accessToken', response.data.accessToken);
         localStorage.setItem('userId', response.data.user.id);
-        localStorage.setItem('role', response.data.user.role);
+        localStorage.setItem('role', response.data.user.role.role);
       }
 
-      response.data.user.role === 'admin' && navigate('/users');
-      response.data.user.role === 'waiter' && navigate('/orders');
-      response.data.user.role === 'chef' && navigate('/kitchen');
+      response.data.user.role.role === 'admin' && navigate('/users');
+      response.data.user.role.role === 'waiter' && navigate('/orders');
+      response.data.user.role.role === 'chef' && navigate('/kitchen');
     } catch (error) {
       if (error.response) {
-        if (error.response.data === 'Email and password are required') {
-          setErrorLabel('Completa los campos requeridos');
-        } else if (error.response.data === 'Cannot find user') {
-          setErrorLabel('Usuario no registrado');
-        } else if (error.response.data === 'Incorrect password') {
-          setErrorLabel('Credenciales  incorrectas');
-        } else {
+        // console.log(error.response.data);
+        if (error.response.data){
+          setErrorLabel(error.response.data.error)
+        }
+        // if (error.response.data === 'Email and password are required') {
+        //   setErrorLabel('Completa los campos requeridos');
+        // } else if (error.response.data === 'Cannot find user') {
+        //   setErrorLabel('Usuario no registrado');
+        // } else if (error.response.data === 'Incorrect password') {
+        //   setErrorLabel('Credenciales  incorrectas');
+        // } 
+        else {
           navigate('/error-page');
         }
       } else {

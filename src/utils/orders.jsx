@@ -45,10 +45,12 @@ export function OrdersLogic() {
       method: 'get',
     })
       .then((response) => {
+        console.log(response, 'ordenes');
         const filteredOrders = response.data.filter( //sólo muestra pedidos de usuario logeado
-          (order) => order.userId === Number(userId)
+          (order) => order.userId === userId
         );
 
+        console.log(filteredOrders, 'filtradas');
         setOrdersData(filteredOrders);
       })
       .catch((error) => {
@@ -66,6 +68,7 @@ export function OrdersLogic() {
       method: 'get',
     })
       .then((response) => {
+        console.log(response, 'productoss');
         setProductsData(response.data);
       })
       .catch((error) => {
@@ -136,13 +139,13 @@ export function OrdersLogic() {
   const handleOpenEditModal = (orderId) => {
     setModalOrderId(orderId);
     setModalOpenEdit(true);
-    const order = ordersData.find((order) => order.id === orderId);
+    const order = ordersData.find((order) => order._id === orderId);
     setEditModalTable(order.table);
     setEditModalClient(order.client);
     setEditModalStatus(order.status);
     setEditModalProducts(order.products.map(item => ({
       qty: item.qty,
-      productId: item.product.id,
+      productId: item.product._id,
       name: item.product.name,
       price: item.product.price,
     }))
@@ -151,6 +154,7 @@ export function OrdersLogic() {
 
   // MANEJO DE CAMBIOS EN LA CANTIDAD DE LOS PRODUCTOS EN LA MODAL EDITAR
   const handleEditModalProductQtyChange = (productId, event) => {
+    console.log(editModalProducts, 'editaaar');
     const updatedProducts = editModalProducts.map((product) => {
       if (product.productId === productId) {
         return { ...product, qty: event.target.value };
@@ -162,12 +166,12 @@ export function OrdersLogic() {
 
   // AÑADIR PRODUCTOS A LA ORDEN EN MODAL EDITAR
   const handleAddProductToOrder = (productId) => {
-    const productToAdd = productsData.find((product) => product.id === Number(productId));
+    const productToAdd = productsData.find((product) => product._id === productId);
     if (productToAdd) {
       setEditModalProducts((prevProducts) => [
         ...prevProducts,
         {
-          productId: productToAdd.id,
+          productId: productToAdd._id,
           name: productToAdd.name,
           qty: 1,
           price: productToAdd.price,
@@ -197,11 +201,9 @@ export function OrdersLogic() {
       table: editModalTable,
       products: editModalProducts.map((product) => ({
         qty: product.qty,
-        product: {
-          id: product.productId,
-          name: product.name,
-          price: product.price,
-        },
+        id: product.productId,
+        name: product.name,
+        price: product.price,
       })),
       status: editModalStatus,
     };
@@ -231,7 +233,7 @@ export function OrdersLogic() {
         // Actualizar estado de pedidos para reflejar cambios en la interfaz
         setOrdersData(prevOrders => {
           const updatedOrders = prevOrders.map(order => {
-            if (order.id === orderId) {
+            if (order._id === orderId) {
               return { ...order, ...body };
             }
             return order;
@@ -258,22 +260,21 @@ export function OrdersLogic() {
 
   // FUNCIÓN PARA CONFIRMAR BORRAR UNA ORDEN EN LA MODAL
   const handleConfirmDeleteClick = (orderId) => {
-    const orderDelete = ordersData.find(order => order.id === orderId);
-
-    const body = orderDelete;
+    const orderDelete = ordersData.find(order => order._id === orderId);
+    console.log(orderDelete._id, 'a borrar');
+    console.log(`https://burger-queen-api-zvby-dev.fl0.io/orders/${orderId}`);
 
     ApiRequest({
       url: `https://burger-queen-api-zvby-dev.fl0.io/orders/${orderId}`,
       method: 'delete',
-      body: body,
     })
-      .then(() => {
+      .then((response) => {
+        console.log(response, 'errrrror');
         // Actualiza la informacion de la tabla para borrar la orden en ella
-        setOrdersData(prevOrders => prevOrders.filter(order => order.id !== orderId));
+        setOrdersData(prevOrders => prevOrders.filter(order => order._id !== orderId));
         setModalOpenDelete(false);
       })
       .catch((error) => {
-        console.error(error);
         if (error.response.data === 'jwt expired' && error.response.status === 401) {
           console.error(error);
           navigate('/login');
@@ -299,7 +300,7 @@ export function OrdersLogic() {
         // Actualiza info de la tabla
         setOrdersData(prevOrders => {
           const updatedOrders = prevOrders.map(order => {
-            if (order.id === orderId) {
+            if (order._id === orderId) {
               return { ...order, status: "Entregado" };
             }
             return order;
