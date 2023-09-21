@@ -204,13 +204,12 @@ export function useMenuLogic() {
       table: Number(table),
       products: products.map((product) => ({
         qty: product.qty,
-        id: product._id,
+        _id: product._id,
         name: product.name,
         price: product.price,
         image: product.image,
         type: product.type,
-        dateEntry: product.dateEntry
-        ,
+        dateEntry: product.dateEntry,
       })),
       status: 'En preparación',
       dateEntry: getDateAndTime(),

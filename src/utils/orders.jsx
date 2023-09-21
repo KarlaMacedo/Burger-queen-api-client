@@ -50,7 +50,7 @@ export function OrdersLogic() {
           (order) => order.userId === userId
         );
 
-        console.log(filteredOrders,'filtradas');
+        console.log(filteredOrders, 'filtradas');
         setOrdersData(filteredOrders);
       })
       .catch((error) => {
@@ -68,6 +68,7 @@ export function OrdersLogic() {
       method: 'get',
     })
       .then((response) => {
+        console.log(response, 'productoss');
         setProductsData(response.data);
       })
       .catch((error) => {
@@ -153,6 +154,7 @@ export function OrdersLogic() {
 
   // MANEJO DE CAMBIOS EN LA CANTIDAD DE LOS PRODUCTOS EN LA MODAL EDITAR
   const handleEditModalProductQtyChange = (productId, event) => {
+    console.log(editModalProducts, 'editaaar');
     const updatedProducts = editModalProducts.map((product) => {
       if (product.productId === productId) {
         return { ...product, qty: event.target.value };
@@ -164,7 +166,7 @@ export function OrdersLogic() {
 
   // AÑADIR PRODUCTOS A LA ORDEN EN MODAL EDITAR
   const handleAddProductToOrder = (productId) => {
-    const productToAdd = productsData.find((product) => product._id === Number(productId));
+    const productToAdd = productsData.find((product) => product._id === productId);
     if (productToAdd) {
       setEditModalProducts((prevProducts) => [
         ...prevProducts,
@@ -199,11 +201,9 @@ export function OrdersLogic() {
       table: editModalTable,
       products: editModalProducts.map((product) => ({
         qty: product.qty,
-        product: {
-          id: product.productId,
-          name: product.name,
-          price: product.price,
-        },
+        id: product.productId,
+        name: product.name,
+        price: product.price,
       })),
       status: editModalStatus,
     };
@@ -261,21 +261,20 @@ export function OrdersLogic() {
   // FUNCIÓN PARA CONFIRMAR BORRAR UNA ORDEN EN LA MODAL
   const handleConfirmDeleteClick = (orderId) => {
     const orderDelete = ordersData.find(order => order._id === orderId);
-
-    const body = orderDelete;
+    console.log(orderDelete._id, 'a borrar');
+    console.log(`https://burger-queen-api-zvby-dev.fl0.io/orders/${orderId}`);
 
     ApiRequest({
       url: `https://burger-queen-api-zvby-dev.fl0.io/orders/${orderId}`,
       method: 'delete',
-      body: body,
     })
-      .then(() => {
+      .then((response) => {
+        console.log(response, 'errrrror');
         // Actualiza la informacion de la tabla para borrar la orden en ella
         setOrdersData(prevOrders => prevOrders.filter(order => order._id !== orderId));
         setModalOpenDelete(false);
       })
       .catch((error) => {
-        console.error(error);
         if (error.response.data === 'jwt expired' && error.response.status === 401) {
           console.error(error);
           navigate('/login');
